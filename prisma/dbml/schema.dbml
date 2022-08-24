@@ -19,6 +19,7 @@ Table employees {
   firstName String [not null]
   lastName String [not null]
   phoneNumber String [unique, not null]
+  emailAddress String [unique, not null]
   streetAddress String [not null]
   cityAddress String [not null]
   stateAddress String [not null]

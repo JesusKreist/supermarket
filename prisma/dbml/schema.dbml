@@ -65,7 +65,7 @@ Enum Role {
 
 Ref: orders.customerId > customers.id [delete: Restrict]
 
-Ref: orders.customerId > employees.id [delete: Restrict]
+Ref: orders.employeeId > employees.id [delete: Restrict]
 
 Ref: orders_products.orderId > orders.id
 

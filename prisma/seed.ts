@@ -27,10 +27,6 @@ const genRandomDecimal = (min: number, max: number, decimalPlaces: number) => {
   return Math.floor(rand * power) / power;
 };
 
-// for (let i = 0; i < 100; i++) {
-//   console.log(genRandomDecimal(1, 100, 2));
-// }
-
 const generateEmployees = async (
   numberOfEmployees: number,
   role: 'CASHIER' | 'MANAGER' | 'SUPERVISOR' = 'CASHIER',
@@ -90,16 +86,81 @@ const allCashiers = async () => {
   return cashiers;
 };
 
-const makeAnOrder = async (customerId: number, employeeId: number) => {
+const getCashierOnShift = async () => {
+  const cashiersOnShift = await prisma.employee.findMany({
+    where: {
+      role: 'CASHIER',
+      isCurrentlyOnShift: true,
+    },
+  });
+
+  const cashierOnShift =
+    cashiersOnShift[Math.floor(Math.random() * cashiersOnShift.length)];
+
+  return cashierOnShift;
+};
+
+const allCustomers = async () => {
+  const customers = await prisma.customer.findMany();
+  return customers;
+};
+
+const makeAnOrder = async (
+  customerId: number | undefined,
+  employeeId: number | undefined,
+) => {
+  if (customerId === undefined) {
+    const customer = await prisma.customer.findFirst();
+    customerId = customer.id;
+  }
+
+  if (employeeId === undefined) {
+    const employee = await prisma.employee.findFirst({
+      where: {
+        role: 'CASHIER',
+        isCurrentlyOnShift: true,
+      },
+    });
+    employeeId = employee.id;
+  }
+
   const orderData = {
     customerId,
     employeeId,
-    ...generateDates(),
   };
 
-  await prisma.order.create({
+  const { id } = await prisma.order.create({
     data: orderData,
   });
+
+  // get an array of random length of products to add to the order
+  const products = await prisma.product.findMany({
+    skip: Math.floor(Math.random() * 3000),
+    take: Math.floor(Math.random() * 18),
+  });
+
+  // create products for every product in the products array
+  products.forEach(async (product) => {
+    await prisma.orderProduct.create({
+      data: {
+        orderId: id,
+        productId: product.sku,
+      },
+    });
+  });
+
+  console.log('Finished making order');
+};
+
+const makeManyOrders = async (
+  customerId: number,
+  numberOfOrdersToMake: number,
+) => {
+  for (let i = 0; i < numberOfOrdersToMake; i++) {
+    const cashierOnShift = await getCashierOnShift();
+    const cashierId = cashierOnShift.id;
+    makeAnOrder(customerId, cashierId);
+  }
 };
 
 const generateProducts = async (numberOfProducts: number) => {
@@ -133,11 +194,12 @@ const generateProducts = async (numberOfProducts: number) => {
 const main = async () => {
   //   const cashiers = await allCashiers();
   //   console.dir(cashiers);
-  //   generateCustomers(10);
-  //   generateEmployees(1, 'MANAGER');
-  //   generateEmployees(3, 'SUPERVISOR');
-  //   generateEmployees(15);
-  generateProducts(3000);
+  //   generateCustomers(0);
+  //   generateEmployees(0, 'MANAGER');
+  //   generateEmployees(0, 'SUPERVISOR');
+  //   generateEmployees(0);
+  //   generateProducts(0);
+  makeManyOrders(31, 4);
 };
 
 main()

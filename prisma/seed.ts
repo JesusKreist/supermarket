@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import { faker } from '@faker-js/faker';
 
+const NUMBER_OF_ITEMS_IN_DB = 3000;
 const prisma = new PrismaClient();
 
 const generateRandomNumber = (min: number, max: number) => {
@@ -16,10 +17,6 @@ const generateDates = (): {
 
   return { createdAt, updatedAt };
 };
-
-// for (let i = 0; i < 100; i++) {
-//   console.log(faker.commerce.price(1, 100, 2));
-// }
 
 const genRandomDecimal = (min: number, max: number, decimalPlaces: number) => {
   const rand = Math.random() * (max - min) + min;
@@ -109,6 +106,7 @@ const makeAnOrder = async (
   customerId: number | undefined,
   employeeId: number | undefined,
 ) => {
+  console.log('#'.repeat(50));
   if (customerId === undefined) {
     const customer = await prisma.customer.findFirst();
     customerId = customer.id;
@@ -127,17 +125,25 @@ const makeAnOrder = async (
   const orderData = {
     customerId,
     employeeId,
+    createdAt: generateDates().createdAt,
   };
 
   const { id } = await prisma.order.create({
     data: orderData,
   });
 
+  const numberOfProductsToSkip = generateRandomNumber(1, NUMBER_OF_ITEMS_IN_DB);
+  const numberOfProductsToTake = generateRandomNumber(1, 18);
   // get an array of random length of products to add to the order
   const products = await prisma.product.findMany({
-    skip: Math.floor(Math.random() * 3000),
-    take: Math.floor(Math.random() * 18),
+    skip: numberOfProductsToSkip,
+    take: numberOfProductsToTake,
   });
+
+  console.log(
+    `The length of the products array is for order ${id}: `,
+    products.length,
+  );
 
   // create products for every product in the products array
   products.forEach(async (product) => {
@@ -150,6 +156,7 @@ const makeAnOrder = async (
   });
 
   console.log('Finished making order');
+  console.log('#'.repeat(50));
 };
 
 const makeManyOrders = async (
@@ -161,6 +168,14 @@ const makeManyOrders = async (
     const cashierId = cashierOnShift.id;
     makeAnOrder(customerId, cashierId);
   }
+};
+
+const makeManyOrdersForManyCustomers = async () => {
+  const customers = await allCustomers();
+  customers.forEach(async (customer) => {
+    const numberOfOrdersToMake = generateRandomNumber(1, 10);
+    await makeManyOrders(customer.id, numberOfOrdersToMake);
+  });
 };
 
 const generateProducts = async (numberOfProducts: number) => {
@@ -194,12 +209,12 @@ const generateProducts = async (numberOfProducts: number) => {
 const main = async () => {
   //   const cashiers = await allCashiers();
   //   console.dir(cashiers);
-  //   generateCustomers(0);
+  // generateCustomers(0);
   //   generateEmployees(0, 'MANAGER');
   //   generateEmployees(0, 'SUPERVISOR');
   //   generateEmployees(0);
   //   generateProducts(0);
-  makeManyOrders(31, 4);
+  makeManyOrdersForManyCustomers();
 };
 
 main()

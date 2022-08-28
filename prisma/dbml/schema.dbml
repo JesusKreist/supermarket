@@ -63,10 +63,10 @@ Enum Role {
   CASHIER
 }
 
-Ref: orders.customerId > customers.id [delete: Restrict]
+Ref: orders.customerId > customers.id [delete: Cascade]
 
-Ref: orders.employeeId > employees.id [delete: Restrict]
+Ref: orders.employeeId > employees.id [delete: Cascade]
 
-Ref: orders_products.orderId > orders.id
+Ref: orders_products.orderId > orders.id [delete: Cascade]
 
-Ref: orders_products.productId > products.sku
+Ref: orders_products.productId > products.sku [delete: Cascade]

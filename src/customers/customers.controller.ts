@@ -6,6 +6,7 @@ import {
   Patch,
   Param,
   Delete,
+  Query,
 } from '@nestjs/common';
 import { CustomersService } from './customers.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
@@ -25,9 +26,18 @@ export class CustomersController {
     return this.customersService.findAll();
   }
 
-  @Get('receipts/:id')
-  getOrderOfOneCustomerById(@Param('id') id: string) {
-    return this.customersService.getOrderOfOneCustomerById(+id);
+  @Get(':customerId/orders')
+  getAllOrders(@Param('customerId') customerId: string) {
+    return this.customersService.getAllOrders(+customerId);
+  }
+
+  @Get(':customerId/order-details')
+  getDetailsOfAnOrder(
+    @Param('customerId') _customerId: string,
+    @Query('orderId') orderId: string,
+  ) {
+    // TODO implement auth with customerId
+    return this.customersService.getDetailsOfAnOrder(+orderId);
   }
 
   @Get(':id')

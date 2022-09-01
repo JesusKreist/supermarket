@@ -12,7 +12,7 @@ export class EmployeesService {
   ) {}
 
   addNewEmployee(createEmployeeDto: CreateEmployeeDto) {
-    return 'This action adds a new employee';
+    return this.prisma.employee.create({ data: createEmployeeDto });
   }
 
   viewAllEmployees() {

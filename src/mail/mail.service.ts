@@ -22,7 +22,7 @@ export class MailService {
         name: firstName,
         message: message,
       },
-      template: './task',
+      template: 'task',
     });
   }
 }

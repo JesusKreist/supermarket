@@ -8,18 +8,11 @@ import {
   Delete,
 } from '@nestjs/common';
 import { CashiersService } from './cashiers.service';
-import { CreateCashierDto } from './dto/create-cashier.dto';
-import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateCashierDto } from './dto/update-cashier.dto';
 
 @Controller('cashiers')
 export class CashiersController {
   constructor(private readonly cashiersService: CashiersService) {}
-
-  @Post()
-  createOrder(@Body() createOrderDto: CreateOrderDto) {
-    return this.cashiersService.createOrder(createOrderDto);
-  }
 
   @Get()
   findAll() {

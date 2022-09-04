@@ -31,15 +31,6 @@ export class CustomersController {
     return this.customersService.getAllOrders(+customerId);
   }
 
-  @Get(':customerId/order-details')
-  getDetailsOfAnOrder(
-    @Param('customerId') _customerId: string,
-    @Query('orderId') orderId: string,
-  ) {
-    // TODO implement auth with customerId
-    return this.customersService.getDetailsOfAnOrder(+orderId);
-  }
-
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.customersService.findOne(+id);

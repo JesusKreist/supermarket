@@ -9,6 +9,7 @@ import { CashiersModule } from './cashiers/cashiers.module';
 import { EmployeesModule } from './employees/employees.module';
 import { MailModule } from './mail/mail.module';
 import { ConfigModule } from '@nestjs/config';
+import { OrdersModule } from './orders/orders.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { ConfigModule } from '@nestjs/config';
     CashiersModule,
     EmployeesModule,
     MailModule,
+    OrdersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

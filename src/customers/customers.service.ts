@@ -38,43 +38,6 @@ export class CustomersService {
     return this.prisma.customer.delete({ where: { id } });
   }
 
-  async getDetailsOfAnOrder(orderId: number) {
-    try {
-      const order = await this.prisma.order.findUniqueOrThrow({
-        where: { id: orderId },
-        select: {
-          createdAt: true,
-          employee: {
-            select: {
-              firstName: true,
-              lastName: true,
-            },
-          },
-          orderProducts: {
-            select: {
-              product: {
-                select: {
-                  itemName: true,
-                  category: true,
-                  price: true,
-                },
-              },
-            },
-          },
-        },
-      });
-
-      let total = order.orderProducts.reduce((acc, curr) => {
-        return acc + parseFloat(`${curr.product.price}`);
-      }, 0);
-      total = parseFloat(total.toFixed(2));
-
-      const numberOfProducts = order.orderProducts.length;
-
-      return { total, numberOfProducts, ...order };
-    } catch (error) {}
-  }
-
   async getAllOrders(customerId: number) {
     console.log('customer id is :>>', customerId);
 

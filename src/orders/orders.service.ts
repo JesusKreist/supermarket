@@ -10,50 +10,40 @@ export class OrdersService {
   constructor(private readonly prisma: PrismaService) {}
 
   async retrieveOrderFromDatabase(orderId: number) {
-    return await this.prisma.order.findUniqueOrThrow({
-      where: { id: orderId },
-      select: {
-        id: true,
-        createdAt: true,
-        employee: {
-          select: {
-            firstName: true,
-            lastName: true,
+    try {
+      return await this.prisma.order.findUniqueOrThrow({
+        where: { id: orderId },
+        select: {
+          id: true,
+          createdAt: true,
+          employee: {
+            select: {
+              firstName: true,
+              lastName: true,
+            },
           },
-        },
-        orderProducts: {
-          select: {
-            product: {
-              select: {
-                itemName: true,
-                category: true,
-                price: true,
+          orderProducts: {
+            select: {
+              product: {
+                select: {
+                  itemName: true,
+                  category: true,
+                  price: true,
+                },
               },
             },
           },
         },
-      },
-    });
+      });
+    } catch (error) {
+      throw new NotFoundException('Order does not exist.');
+    }
   }
 
-  async getTotalPriceOfAnOrder(
-    orderProducts: {
-      product: {
-        itemName: string;
-        category: string;
-        price: Decimal;
-      };
-    }[],
-  ) {
-    const total = orderProducts.reduce((acc, curr) => {
-      return acc + parseFloat(`${curr.product.price}`);
-    }, 0);
-
-    return parseFloat(total.toFixed(2));
-  }
   async createOrder(createOrderDto: CreateOrderDto) {
     const { customerId, employeeId, orderItems } = createOrderDto;
-    console.dir(createOrderDto);
+
+    // Create the order so the id can be used to create order products
     const newOrder = await this.prisma.order.create({
       data: {
         customerId,
@@ -61,40 +51,30 @@ export class OrdersService {
       },
     });
 
-    orderItems.forEach(async (productId) => {
-      await this.prisma.orderProduct.create({
-        data: {
-          orderId: newOrder.id,
-          productId: productId,
-        },
-      });
+    // batch insert order items
+    await this.prisma.orderProduct.createMany({
+      data: orderItems.map((productId) => ({
+        orderId: newOrder.id,
+        productId: productId,
+      })),
     });
 
-    try {
-      const order = await this.retrieveOrderFromDatabase(newOrder.id);
-      const total = await this.getTotalPriceOfAnOrder(order.orderProducts);
-      const numberOfProducts = orderItems.length;
-
-      return { total, numberOfProducts, ...order };
-    } catch (error) {}
+    return this.getDetailsOfAnOrder(newOrder.id);
   }
 
   async getDetailsOfAnOrder(orderId: number) {
     console.log('The order id is :>> ', orderId);
-    try {
-      const order = await this.retrieveOrderFromDatabase(orderId);
 
-      let total = order.orderProducts.reduce((acc, curr) => {
-        return acc + parseFloat(`${curr.product.price}`);
-      }, 0);
-      total = parseFloat(total.toFixed(2));
+    const order = await this.retrieveOrderFromDatabase(orderId);
 
-      const numberOfProducts = order.orderProducts.length;
+    let total = order.orderProducts.reduce((acc, curr) => {
+      return acc + parseFloat(`${curr.product.price}`);
+    }, 0);
+    total = parseFloat(total.toFixed(2));
 
-      return { total, numberOfProducts, ...order };
-    } catch (error) {
-      throw new NotFoundException('Order does not exist!');
-    }
+    const numberOfProducts = order.orderProducts.length;
+
+    return { total, numberOfProducts, ...order };
   }
 
   findAll() {

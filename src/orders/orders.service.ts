@@ -9,7 +9,7 @@ import { Decimal } from '@prisma/client/runtime';
 export class OrdersService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async retrieveOrderFromDatabase(orderId: number) {
+  protected async retrieveOrderFromDatabase(orderId: number) {
     try {
       return await this.prisma.order.findUniqueOrThrow({
         where: { id: orderId },
@@ -63,8 +63,6 @@ export class OrdersService {
   }
 
   async getDetailsOfAnOrder(orderId: number) {
-    console.log('The order id is :>> ', orderId);
-
     const order = await this.retrieveOrderFromDatabase(orderId);
 
     let total = order.orderProducts.reduce((acc, curr) => {
@@ -79,10 +77,6 @@ export class OrdersService {
 
   findAll() {
     return `This action returns all orders`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} order`;
   }
 
   update(id: number, updateOrderDto: UpdateOrderDto) {

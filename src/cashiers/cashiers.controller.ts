@@ -18,6 +18,7 @@ export class CashiersController {
 
   @Post('new-order')
   createOrder(@Body() createOrderDto: CreateOrderDto) {
+    console.log(createOrderDto);
     return this.cashiersService.createOrder(createOrderDto);
   }
 

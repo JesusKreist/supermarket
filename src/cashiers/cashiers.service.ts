@@ -15,6 +15,7 @@ export class CashiersService {
   ) {}
 
   createOrder(createOrderDto: CreateOrderDto) {
+    console.log(createOrderDto instanceof CreateOrderDto);
     return this.ordersService.createOrder(createOrderDto);
   }
 

@@ -1,9 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { UpdateOrderDto } from './dto/update-order.dto';
-import { Product } from '@prisma/client';
-import { Decimal } from '@prisma/client/runtime';
 
 @Injectable()
 export class OrdersService {
@@ -73,17 +70,5 @@ export class OrdersService {
     const numberOfProducts = order.orderProducts.length;
 
     return { total, numberOfProducts, ...order };
-  }
-
-  findAll() {
-    return `This action returns all orders`;
-  }
-
-  update(id: number, updateOrderDto: UpdateOrderDto) {
-    return `This action updates a #${id} order`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} order`;
   }
 }

@@ -8,7 +8,7 @@ import {
   Delete,
 } from '@nestjs/common';
 import { CreateCustomerDto } from '../customers/dto/create-customer.dto';
-import { CreateOrderDto } from '../orders/dto/create-order.dto';
+import { CreateOrderDto, GuestOrderDto } from '../orders/dto/create-order.dto';
 import { CashiersService } from './cashiers.service';
 import { UpdateCashierDto } from './dto/update-cashier.dto';
 
@@ -17,9 +17,13 @@ export class CashiersController {
   constructor(private readonly cashiersService: CashiersService) {}
 
   @Post('new-order')
-  createOrder(@Body() createOrderDto: CreateOrderDto) {
-    console.log(createOrderDto);
-    return this.cashiersService.createOrder(createOrderDto);
+  newCustomerOrder(@Body() createOrderDto: CreateOrderDto) {
+    return this.cashiersService.createCustomerOrder(createOrderDto);
+  }
+
+  @Post('guest-checkout')
+  newGuestOrder(@Body() guestOrderDto: GuestOrderDto) {
+    return this.cashiersService.createGuestOrder(guestOrderDto);
   }
 
   @Post('new-customer')

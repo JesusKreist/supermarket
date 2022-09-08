@@ -1,4 +1,4 @@
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsOptional } from 'class-validator';
 
 type productId = number;
 
@@ -15,6 +15,4 @@ export class CreateOrderDto extends OrderDto {
   customerId: number;
 }
 
-export class GuestOrderDto extends OrderDto {
-  customerId?: number;
-}
+export class GuestOrderDto extends OrderDto {}

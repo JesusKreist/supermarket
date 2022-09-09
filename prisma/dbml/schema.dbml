@@ -33,10 +33,10 @@ Table employees {
 
 Table orders {
   id Int [pk, increment]
-  customerId Int [not null]
+  customerId Int
   employeeId Int [not null]
   createdAt DateTime [default: `now()`, not null]
-  customer customers [not null]
+  customer customers
   employee employees [not null]
   orderProducts orders_products [not null]
 }

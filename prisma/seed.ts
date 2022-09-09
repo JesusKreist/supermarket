@@ -106,12 +106,6 @@ const makeAnOrder = async (
   customerId: number | undefined,
   employeeId: number | undefined,
 ) => {
-  console.log('#'.repeat(50));
-  if (customerId === undefined) {
-    const customer = await prisma.customer.findFirst();
-    customerId = customer.id;
-  }
-
   if (employeeId === undefined) {
     const employee = await prisma.employee.findFirst({
       where: {
@@ -170,8 +164,13 @@ const makeManyOrders = async (
   }
 };
 
+const makeManyOrdersForGuests = async () => {
+  await makeManyOrders(undefined, 10);
+};
+
 const makeManyOrdersForManyCustomers = async () => {
   const customers = await allCustomers();
+  console.log(customers);
   customers.forEach(async (customer) => {
     const numberOfOrdersToMake = generateRandomNumber(1, 10);
     await makeManyOrders(customer.id, numberOfOrdersToMake);
@@ -207,14 +206,13 @@ const generateProducts = async (numberOfProducts: number) => {
 };
 
 const main = async () => {
-  //   const cashiers = await allCashiers();
-  //   console.dir(cashiers);
-  // generateCustomers(0);
-  //   generateEmployees(0, 'MANAGER');
-  //   generateEmployees(0, 'SUPERVISOR');
-  //   generateEmployees(0);
-  //   generateProducts(0);
-  makeManyOrdersForManyCustomers();
+  await generateEmployees(15, 'CASHIER');
+  await generateCustomers(30);
+  await generateEmployees(1, 'MANAGER');
+  await generateEmployees(3, 'SUPERVISOR');
+  await generateProducts(3000);
+  await makeManyOrdersForManyCustomers();
+  await makeManyOrdersForGuests();
 };
 
 main()

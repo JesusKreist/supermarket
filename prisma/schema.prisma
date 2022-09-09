@@ -52,10 +52,10 @@ model Employee {
 
 model Order {
   id            Int            @id @default(autoincrement())
-  customerId    Int            @map("customer_id")
+  customerId    Int?           @map("customer_id")
   employeeId    Int            @map("employee_id")
   createdAt     DateTime       @default(now()) @map("created_at") @db.DateTime(0)
-  customer      Customer       @relation(fields: [customerId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "orders_ibfk_1")
+  customer      Customer?      @relation(fields: [customerId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "orders_ibfk_1")
   employee      Employee       @relation(fields: [employeeId], references: [id], onDelete: Cascade, onUpdate: Cascade, map: "orders_ibfk_2")
   orderProducts OrderProduct[]
 

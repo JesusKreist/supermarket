@@ -2,7 +2,7 @@ import { IsNotEmpty, IsNumber } from 'class-validator';
 
 type productId = number;
 
-export class GuestOrderDto {
+export class OrderDto {
   @IsNotEmpty()
   @IsNumber()
   employeeId: number;
@@ -12,8 +12,10 @@ export class GuestOrderDto {
   orderItems: productId[];
 }
 
-export class CreateOrderDto extends GuestOrderDto {
+export class CustomerOrderDto extends OrderDto {
   @IsNotEmpty()
   @IsNumber()
   customerId: number;
 }
+
+export class GuestOrderDto extends OrderDto {}

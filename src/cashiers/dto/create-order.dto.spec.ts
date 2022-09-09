@@ -1,7 +1,7 @@
-import { CreateOrderDto } from './create-order.dto';
+import { CreateCustomerOrderDto } from './create-order.dto';
 
-describe('CreateOrderDto', () => {
+describe('CreateCustomerOrderDto', () => {
   it('should be defined', () => {
-    expect(new CreateOrderDto()).toBeDefined();
+    expect(new CreateCustomerOrderDto()).toBeDefined();
   });
 });

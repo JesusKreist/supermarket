@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
-import { CreateOrderDto } from './dto/create-order.dto';
+import { CustomerOrderDto, GuestOrderDto } from './dto/create-order.dto';
 
 @Injectable()
 export class OrdersService {
@@ -37,8 +37,13 @@ export class OrdersService {
     }
   }
 
-  async createOrder(createOrderDto: CreateOrderDto) {
-    const { customerId, employeeId, orderItems } = createOrderDto;
+  async createOrder(createOrderDto: CustomerOrderDto | GuestOrderDto) {
+    const { employeeId, orderItems } = createOrderDto;
+
+    const customerId =
+      createOrderDto instanceof GuestOrderDto
+        ? undefined
+        : createOrderDto.customerId;
 
     // Create the order so the id can be used to create order products
     const newOrder = await this.prisma.order.create({

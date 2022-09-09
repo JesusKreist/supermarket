@@ -2,7 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 import { CustomersService } from '../customers/customers.service';
 import { CreateCustomerDto } from '../customers/dto/create-customer.dto';
-import { CreateOrderDto, GuestOrderDto } from '../orders/dto/create-order.dto';
+import {
+  CustomerOrderDto,
+  GuestOrderDto,
+} from '../orders/dto/create-order.dto';
 import { OrdersService } from '../orders/orders.service';
 import { UpdateCashierDto } from './dto/update-cashier.dto';
 
@@ -14,12 +17,12 @@ export class CashiersService {
     private readonly customersService: CustomersService,
   ) {}
 
-  createCustomerOrder(createOrderDto: CreateOrderDto) {
+  createCustomerOrder(createOrderDto: CustomerOrderDto) {
     return this.ordersService.createOrder(createOrderDto);
   }
 
   createGuestOrder(guestOrderDto: GuestOrderDto) {
-    // return this.ordersService.createOrder(guestOrderDto);
+    return this.ordersService.createOrder(guestOrderDto);
   }
 
   createCustomer(createCustomerDto: CreateCustomerDto) {

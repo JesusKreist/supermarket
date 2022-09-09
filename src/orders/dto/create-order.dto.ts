@@ -1,18 +1,19 @@
-import { IsNotEmpty, IsOptional } from 'class-validator';
+import { IsNotEmpty, IsNumber } from 'class-validator';
 
 type productId = number;
 
-class OrderDto {
+export class GuestOrderDto {
   @IsNotEmpty()
+  @IsNumber()
   employeeId: number;
 
   @IsNotEmpty()
+  @IsNumber({}, { each: true })
   orderItems: productId[];
 }
 
-export class CreateOrderDto extends OrderDto {
+export class CreateOrderDto extends GuestOrderDto {
   @IsNotEmpty()
+  @IsNumber()
   customerId: number;
 }
-
-export class GuestOrderDto extends OrderDto {}

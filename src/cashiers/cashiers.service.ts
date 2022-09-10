@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 import { CustomersService } from '../customers/customers.service';
 import { CreateCustomerDto } from '../customers/dto/create-customer.dto';
@@ -27,7 +27,13 @@ export class CashiersService {
   }
 
   async createCustomer(createCustomerDto: CreateCustomerDto) {
-    await this.customersService.findOneByEmail(createCustomerDto.emailAddress);
+    const isEmailInDatabase = await this.customersService.isEmailInDatabase(
+      createCustomerDto.emailAddress,
+    );
+    if (isEmailInDatabase) {
+      throw new ConflictException('Email already exists.');
+    }
+
     return this.customersService.create(createCustomerDto);
   }
 

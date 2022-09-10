@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
@@ -27,15 +31,16 @@ export class CustomersService {
     }
   }
 
-  async findOneByEmail(emailAddress: string) {
-    try {
-      return await this.prisma.customer.findUniqueOrThrow({
-        where: { emailAddress },
-      });
-    } catch (error) {
-      // TODO: handle error by logging it
-      throw new NotFoundException('Customer not found.');
+  async isEmailInDatabase(emailAddress: string) {
+    const customer = await this.prisma.customer.findUnique({
+      where: { emailAddress },
+    });
+
+    if (customer) {
+      return true;
     }
+
+    return false;
   }
 
   async update(id: number, updateCustomerDto: UpdateCustomerDto) {

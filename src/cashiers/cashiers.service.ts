@@ -17,7 +17,8 @@ export class CashiersService {
     private readonly customersService: CustomersService,
   ) {}
 
-  createCustomerOrder(createOrderDto: CustomerOrderDto) {
+  async createCustomerOrder(createOrderDto: CustomerOrderDto) {
+    await this.customersService.findOne(createOrderDto.customerId);
     return this.ordersService.createOrder(createOrderDto);
   }
 

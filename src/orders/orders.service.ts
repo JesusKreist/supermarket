@@ -45,6 +45,7 @@ export class OrdersService {
         ? undefined
         : createOrderDto.customerId;
 
+    // TODO: add a check to see if the customer is stored in the database
     // Create the order so the id can be used to create order products
     const newOrder = await this.prisma.order.create({
       data: {

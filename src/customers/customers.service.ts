@@ -27,6 +27,17 @@ export class CustomersService {
     }
   }
 
+  async findOneByEmail(emailAddress: string) {
+    try {
+      return await this.prisma.customer.findUniqueOrThrow({
+        where: { emailAddress },
+      });
+    } catch (error) {
+      // TODO: handle error by logging it
+      throw new NotFoundException('Customer not found.');
+    }
+  }
+
   async update(id: number, updateCustomerDto: UpdateCustomerDto) {
     return await this.prisma.customer.update({
       where: { id },

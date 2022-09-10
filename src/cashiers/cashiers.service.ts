@@ -26,7 +26,8 @@ export class CashiersService {
     return this.ordersService.createOrder(guestOrderDto);
   }
 
-  createCustomer(createCustomerDto: CreateCustomerDto) {
+  async createCustomer(createCustomerDto: CreateCustomerDto) {
+    await this.customersService.findOneByEmail(createCustomerDto.emailAddress);
     return this.customersService.create(createCustomerDto);
   }
 

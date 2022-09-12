@@ -5,8 +5,44 @@ import { CustomerOrderDto, GuestOrderDto } from './dto/create-order.dto';
 @Injectable()
 export class OrdersService {
   constructor(private readonly prisma: PrismaService) {}
+  protected async retrieveOrderWithCustomerInfo(orderId: number) {
+    try {
+      return await this.prisma.order.findUniqueOrThrow({
+        where: { id: orderId },
+        select: {
+          id: true,
+          createdAt: true,
+          employee: {
+            select: {
+              firstName: true,
+              lastName: true,
+            },
+          },
+          orderProducts: {
+            select: {
+              product: {
+                select: {
+                  itemName: true,
+                  category: true,
+                  price: true,
+                },
+              },
+            },
+          },
+          customer: {
+            select: {
+              firstName: true,
+              lastName: true,
+            },
+          },
+        },
+      });
+    } catch (error) {
+      throw new NotFoundException('Order does not exist.');
+    }
+  }
 
-  protected async retrieveOrderFromDatabase(orderId: number) {
+  protected async retrieveOrderWithoutCustomerInfo(orderId: number) {
     try {
       return await this.prisma.order.findUniqueOrThrow({
         where: { id: orderId },
@@ -66,7 +102,20 @@ export class OrdersService {
   }
 
   async getDetailsOfAnOrder(orderId: number) {
-    const order = await this.retrieveOrderFromDatabase(orderId);
+    const order = await this.retrieveOrderWithoutCustomerInfo(orderId);
+
+    let total = order.orderProducts.reduce((acc, curr) => {
+      return acc + parseFloat(`${curr.product.price}`);
+    }, 0);
+    total = parseFloat(total.toFixed(2));
+
+    const numberOfProducts = order.orderProducts.length;
+
+    return { total, numberOfProducts, ...order };
+  }
+
+  async getDetailsWithCustomerInfoOfAnOrder(orderId: number) {
+    const order = await this.retrieveOrderWithCustomerInfo(orderId);
 
     let total = order.orderProducts.reduce((acc, curr) => {
       return acc + parseFloat(`${curr.product.price}`);

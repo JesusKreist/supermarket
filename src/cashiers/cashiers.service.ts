@@ -7,6 +7,7 @@ import {
   GuestOrderDto,
 } from '../orders/dto/create-order.dto';
 import { OrdersService } from '../orders/orders.service';
+import { GuestToCustomerOrderDto } from './dto/guest-to-customer.dto';
 import { UpdateCashierDto } from './dto/update-cashier.dto';
 
 @Injectable()
@@ -35,6 +36,33 @@ export class CashiersService {
     }
 
     return this.customersService.create(createCustomerDto);
+  }
+
+  async transferGuestOrdersToCustomer(
+    guestToCustomerOrderDto: GuestToCustomerOrderDto,
+  ) {
+    const { customerId, ordersToTransfer } = guestToCustomerOrderDto;
+    await this.customersService.findOne(customerId);
+
+    const mappedOrders = ordersToTransfer.map((orderId) =>
+      this.ordersService.getDetailsWithCustomerInfoOfAnOrder(orderId),
+    );
+    const orders = await Promise.all(mappedOrders);
+    const allCustomersInOrders = orders.map((order) => order.customer);
+    const areAllOrdersByGuests = allCustomersInOrders.every(
+      (customer) => customer === null,
+    );
+
+    if (!areAllOrdersByGuests) {
+      throw new ConflictException('One or more orders are not guest orders.');
+    }
+
+    const batchUpdateOrders = orders.map((order) => {
+      return this.ordersService.updateCustomerOnOrder(order.id, customerId);
+    });
+    const updatedOrders = await Promise.all(batchUpdateOrders);
+
+    return updatedOrders;
   }
 
   findAll() {

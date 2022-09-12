@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 import { CustomerOrderDto, GuestOrderDto } from './dto/create-order.dto';
 
@@ -125,5 +129,25 @@ export class OrdersService {
     const numberOfProducts = order.orderProducts.length;
 
     return { total, numberOfProducts, ...order };
+  }
+
+  async updateCustomerOnOrder(orderId: number, customerId: number) {
+    const order = await this.retrieveOrderWithCustomerInfo(orderId);
+
+    const isOrderAlreadyAssociatedWithCustomer = order.customer !== null;
+    if (isOrderAlreadyAssociatedWithCustomer) {
+      throw new BadRequestException(
+        'Order is already associated with a customer.',
+      );
+    }
+
+    const updatedOrder = await this.prisma.order.update({
+      where: { id: orderId },
+      data: {
+        customerId,
+      },
+    });
+
+    return updatedOrder;
   }
 }

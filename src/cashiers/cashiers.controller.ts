@@ -13,6 +13,7 @@ import {
   GuestOrderDto,
 } from '../orders/dto/create-order.dto';
 import { CashiersService } from './cashiers.service';
+import { GuestToCustomerOrderDto } from './dto/guest-to-customer.dto';
 import { UpdateCashierDto } from './dto/update-cashier.dto';
 
 @Controller('cashiers')
@@ -32,6 +33,15 @@ export class CashiersController {
   @Post('new-customer')
   createCustomer(@Body() createCustomerDto: CreateCustomerDto) {
     return this.cashiersService.createCustomer(createCustomerDto);
+  }
+
+  @Post('transfer-order')
+  transferOrderToCustomer(
+    @Body() guestToCustomerOrderDto: GuestToCustomerOrderDto,
+  ) {
+    return this.cashiersService.transferGuestOrdersToCustomer(
+      guestToCustomerOrderDto,
+    );
   }
 
   @Get()

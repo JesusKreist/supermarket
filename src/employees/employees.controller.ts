@@ -22,8 +22,8 @@ export class EmployeesController {
   }
 
   @Get()
-  viewAllEmployees() {
-    return this.employeesService.viewAllEmployees();
+  viewAllEmployees(@Body('role') role: 'CASHIER' | 'SUPERVISOR') {
+    return this.employeesService.viewAllEmployees(role);
   }
 
   @Get(':id')

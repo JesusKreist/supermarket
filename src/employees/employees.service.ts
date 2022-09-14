@@ -15,8 +15,8 @@ export class EmployeesService {
     return this.prisma.employee.create({ data: createEmployeeDto });
   }
 
-  viewAllEmployees() {
-    return this.prisma.employee.findMany();
+  viewAllEmployees(role?: 'CASHIER' | 'SUPERVISOR') {
+    return this.prisma.employee.findMany({ where: { role: role } });
   }
 
   viewOneEmployee(employeeId: number) {

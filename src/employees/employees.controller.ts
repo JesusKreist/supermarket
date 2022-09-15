@@ -22,8 +22,11 @@ export class EmployeesController {
   }
 
   @Get()
-  viewAllEmployees(@Body('role') role: 'CASHIER' | 'SUPERVISOR') {
-    return this.employeesService.viewAllEmployees(role);
+  viewAllEmployees(
+    @Body('role') role: 'CASHIER' | 'SUPERVISOR',
+    @Body('isOnShift') isOnShift: boolean,
+  ) {
+    return this.employeesService.viewAllEmployees(role, isOnShift);
   }
 
   @Get(':id')

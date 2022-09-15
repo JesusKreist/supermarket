@@ -11,12 +11,26 @@ export class EmployeesService {
     private readonly mailService: MailService,
   ) {}
 
-  addNewEmployee(createEmployeeDto: CreateEmployeeDto) {
-    return this.prisma.employee.create({ data: createEmployeeDto });
+  async addNewEmployee(createEmployeeDto: CreateEmployeeDto) {
+    const newEmployee = await this.prisma.employee.create({
+      data: createEmployeeDto,
+    });
+    return newEmployee;
   }
 
-  viewAllEmployees(role?: 'CASHIER' | 'SUPERVISOR') {
-    return this.prisma.employee.findMany({ where: { role: role } });
+  async viewAllEmployees(role?: 'CASHIER' | 'SUPERVISOR', isOnShift?: boolean) {
+    return isOnShift
+      ? await this.prisma.employee.findMany({
+          where: {
+            role: role,
+            isCurrentlyOnShift: true,
+          },
+        })
+      : this.prisma.employee.findMany({
+          where: {
+            role: role,
+          },
+        });
   }
 
   viewOneEmployee(employeeId: number) {

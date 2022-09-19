@@ -5,13 +5,19 @@ export type EmailPayload = {
   recipient: string;
   firstName: string;
   message: string;
+  bccEmails?: string[];
 };
 
 @Injectable()
 export class MailService {
   constructor(private readonly mailerService: MailerService) {}
 
-  async sendTaskEmail({ recipient, message, firstName }: EmailPayload) {
+  async sendTaskEmail({
+    recipient,
+    message,
+    firstName,
+    bccEmails,
+  }: EmailPayload) {
     console.log('The recipient is: ' + recipient);
     console.log('The message is: ' + message);
     return await this.mailerService.sendMail({
@@ -23,6 +29,7 @@ export class MailService {
         message: message,
       },
       template: 'task',
+      bcc: bccEmails || [],
     });
   }
 }

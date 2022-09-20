@@ -60,6 +60,6 @@ export class EmployeesController {
     @Body('id') id: string,
     @Body('message') message: string,
   ) {
-    return this.employeesService.sendEmail(+id, message);
+    return this.employeesService.sendEmail(+id, { message });
   }
 }

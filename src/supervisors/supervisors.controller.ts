@@ -22,12 +22,12 @@ export class SupervisorsController {
     return this.supervisorsService.showAllCashiers(isOnShift);
   }
 
-  @Post()
+  @Post('send-email-to-all-cashiers')
   sendEmailToAllCashiers(@Body('message') message: string) {
     return this.supervisorsService.sendEmailToAllCashiers(message);
   }
 
-  @Post()
+  @Post('send-email-to-one-cashier')
   sendEmailToOneCashier(
     @Body('cashierId') cashierId: number,
     @Body('message') message: string,

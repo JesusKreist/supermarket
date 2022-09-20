@@ -3,7 +3,6 @@ import { Injectable } from '@nestjs/common';
 
 export type EmailPayload = {
   recipient: string;
-  firstName: string;
   message: string;
   bccEmails?: string[];
 };
@@ -12,12 +11,7 @@ export type EmailPayload = {
 export class MailService {
   constructor(private readonly mailerService: MailerService) {}
 
-  async sendTaskEmail({
-    recipient,
-    message,
-    firstName,
-    bccEmails,
-  }: EmailPayload) {
+  async sendTaskEmail({ recipient, message, bccEmails }: EmailPayload) {
     console.log('The recipient is: ' + recipient);
     console.log('The message is: ' + message);
     return await this.mailerService.sendMail({
@@ -25,7 +19,6 @@ export class MailService {
       from: '',
       subject: 'Task',
       context: {
-        name: firstName,
         message: message,
       },
       template: 'task',

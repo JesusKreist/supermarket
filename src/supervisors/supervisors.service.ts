@@ -26,9 +26,19 @@ export class SupervisorsService {
     });
   }
   async sendEmailToAllCashiers(message: string) {
-    return null;
+    const allCashiers = await this.showAllCashiers();
+    const idOfFirstCashier = allCashiers[0].id;
+    const allEmailsOfCashiers = allCashiers.map(
+      (cashier) => cashier.emailAddress,
+    );
+    const cashierEmailsWithoutFirstCashier = allEmailsOfCashiers.slice(1);
+
+    return this.employeesService.sendEmail(idOfFirstCashier, {
+      message,
+      bccEmails: cashierEmailsWithoutFirstCashier,
+    });
   }
   async sendEmailToOneCashier(cashierId: number, message: string) {
-    return null;
+    return this.employeesService.sendEmail(cashierId, { message });
   }
 }

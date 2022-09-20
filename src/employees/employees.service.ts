@@ -62,13 +62,9 @@ export class EmployeesService {
     return this.prisma.employee.delete({ where: { id: id } });
   }
 
-  async sendEmail(id: number, message: string) {
+  async sendEmail(id: number, emailPayload: Partial<EmailPayload>) {
     const employee = await this.viewOneEmployee(id);
-    const emailPayload: EmailPayload = {
-      firstName: employee.firstName,
-      recipient: employee.emailAddress,
-      message: message,
-    };
-    return this.mailService.sendTaskEmail(emailPayload);
+    emailPayload.recipient = employee.emailAddress;
+    return this.mailService.sendTaskEmail(emailPayload as EmailPayload);
   }
 }

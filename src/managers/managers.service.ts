@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { CreateEmployeeDto } from '../employees/dto/create-employee.dto';
-import { CreateManagerDto } from './dto/create-manager.dto';
-import { UpdateManagerDto } from './dto/update-manager.dto';
+import { EmployeesService } from '../employees/employees.service';
 
 @Injectable()
 export class ManagersService {
+  constructor(private readonly employeesService: EmployeesService) {}
   createNewEmployee(createEmployeeDto: CreateEmployeeDto) {
-    return null;
+    return this.employeesService.addNewEmployee(createEmployeeDto);
   }
   changeRoleOfEmployee(employeeId: number, newRole: 'CASHIER' | 'SUPERVISOR') {
     return null;

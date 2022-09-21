@@ -18,6 +18,7 @@ export class EmployeesController {
 
   @Post()
   addNewEmployee(@Body() createEmployeeDto: CreateEmployeeDto) {
+    console.log(createEmployeeDto);
     return this.employeesService.addNewEmployee(createEmployeeDto);
   }
 

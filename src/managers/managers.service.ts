@@ -8,9 +8,11 @@ export class ManagersService {
   createNewEmployee(createEmployeeDto: CreateEmployeeDto) {
     return this.employeesService.addNewEmployee(createEmployeeDto);
   }
+
   changeRoleOfEmployee(employeeId: number, newRole: 'CASHIER' | 'SUPERVISOR') {
-    return null;
+    return this.employeesService.changeRole(employeeId, newRole);
   }
+
   softDeleteEmployee(employeeId: number) {
     return null;
   }

@@ -14,6 +14,7 @@ export class ManagersController {
 
   @Patch('change-employee-role')
   update(@Body() changeRoleOfEmployeeDto: ChangeRoleOfEmployeeDto) {
+    console.log('changeRoleOfEmployeeDto :>>', changeRoleOfEmployeeDto);
     const { employeeId, newRole } = changeRoleOfEmployeeDto;
     return this.managersService.changeRoleOfEmployee(employeeId, newRole);
   }

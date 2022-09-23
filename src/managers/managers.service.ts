@@ -16,6 +16,7 @@ export class ManagersService {
   softDeleteEmployee(employeeId: number) {
     return null;
   }
+
   listAllEmployees() {
     return null;
   }

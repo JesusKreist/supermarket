@@ -36,5 +36,5 @@ lerna-debug.log*
 
 
 .env
-**/**.sql
+**/test_sql.sql
 bootstrap_code.ts

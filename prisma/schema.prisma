@@ -42,6 +42,7 @@ model Employee {
   stateAddress       String   @map("state_address") @db.VarChar(100)
   lastCheckInTime    DateTime @map("last_check_in_time") @db.DateTime(0)
   isCurrentlyOnShift Boolean  @map("is_currently_on_shift") @db.TinyInt()
+  isDeleted          Boolean  @default(false) @map("is_deleted") @db.TinyInt()
   role               Role     @default(CASHIER) @map("employee_role")
   createdAt          DateTime @default(now()) @map("created_at") @db.DateTime(0)
   updatedAt          DateTime @default(now()) @map("updated_at") @db.DateTime(0)

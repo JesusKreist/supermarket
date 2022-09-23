@@ -25,6 +25,7 @@ Table employees {
   stateAddress String [not null]
   lastCheckInTime DateTime [not null]
   isCurrentlyOnShift Boolean [not null]
+  isDeleted Boolean [not null, default: false]
   role Role [not null, default: 'CASHIER']
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [default: `now()`, not null]

@@ -17,12 +17,14 @@ export class ManagersService {
     return this.employeesService.softDeleteEmployee(employeeId);
   }
 
-  listAllEmployees() {
-    return null;
+  listAllEmployees(role?: 'CASHIER' | 'SUPERVISOR') {
+    return this.employeesService.viewAllEmployees(role);
   }
+
   sendEmailToOneEmployee(employeeId: number, message: string) {
     return null;
   }
+
   sendEmailToAllEmployees(message: string) {
     return null;
   }

@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Delete,
+  BadRequestException,
+} from '@nestjs/common';
 import { ManagersService } from './managers.service';
 import { CreateEmployeeDto } from '../employees/dto/create-employee.dto';
 import { ChangeRoleOfEmployeeDto } from './dto/change-role-of-employee.dto';
@@ -21,6 +29,10 @@ export class ManagersController {
 
   @Delete('soft-delete-employee')
   softDeleteEmployee(@Body('employeeId') employeeId: string) {
+    if (!employeeId) {
+      throw new BadRequestException('employeeId is required');
+    }
+
     return this.managersService.softDeleteEmployee(+employeeId);
   }
 

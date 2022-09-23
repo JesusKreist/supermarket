@@ -14,7 +14,7 @@ export class ManagersService {
   }
 
   softDeleteEmployee(employeeId: number) {
-    return null;
+    return this.employeesService.softDeleteEmployee(employeeId);
   }
 
   listAllEmployees() {

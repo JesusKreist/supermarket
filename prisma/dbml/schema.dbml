@@ -30,6 +30,7 @@ Table employees {
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [default: `now()`, not null]
   orders orders [not null]
+  task tasks [not null]
 }
 
 Table orders {
@@ -58,6 +59,13 @@ Table products {
   orderProduct orders_products [not null]
 }
 
+Table tasks {
+  id Int [pk, increment]
+  message String [not null]
+  employeeId Int [not null]
+  employee employees [not null]
+}
+
 Enum Role {
   MANAGER
   SUPERVISOR
@@ -71,3 +79,5 @@ Ref: orders.employeeId > employees.id [delete: Cascade]
 Ref: orders_products.orderId > orders.id [delete: Cascade]
 
 Ref: orders_products.productId > products.sku [delete: Cascade]
+
+Ref: tasks.employeeId > employees.id [delete: Cascade]

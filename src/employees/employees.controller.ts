@@ -52,8 +52,8 @@ export class EmployeesController {
   }
 
   @Delete(':id')
-  removeEmployee(@Param('id') id: string) {
-    return this.employeesService.removeEmployee(+id);
+  softDeleteEmployee(@Param('id') id: string) {
+    return this.employeesService.softDeleteEmployee(+id);
   }
 
   @Post('send-employee-mail')

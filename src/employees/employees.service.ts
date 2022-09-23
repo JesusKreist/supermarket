@@ -57,9 +57,11 @@ export class EmployeesService {
     });
   }
 
-  removeEmployee(id: number) {
-    // TODO perform soft delete
-    return this.prisma.employee.delete({ where: { id: id } });
+  softDeleteEmployee(id: number) {
+    return this.prisma.employee.update({
+      where: { id: id },
+      data: { isDeleted: true },
+    });
   }
 
   async sendEmail(id: number, emailPayload: Partial<EmailPayload>) {

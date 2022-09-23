@@ -10,6 +10,7 @@ import {
 import { ManagersService } from './managers.service';
 import { CreateEmployeeDto } from '../employees/dto/create-employee.dto';
 import { ChangeRoleOfEmployeeDto } from './dto/change-role-of-employee.dto';
+import { EmailToOneEmployeeDto } from './dto/email-to-employees.dto';
 
 @Controller('managers')
 export class ManagersController {
@@ -41,10 +42,8 @@ export class ManagersController {
   }
 
   @Post('send-email-to-one-employee')
-  sendEmailToOneEmployee(
-    @Body('employeeId') employeeId: number,
-    @Body('message') message: string,
-  ) {
+  sendEmailToOneEmployee(@Body() emailToOneEmployeeDto: EmailToOneEmployeeDto) {
+    const { employeeId, message } = emailToOneEmployeeDto;
     return this.managersService.sendEmailToOneEmployee(employeeId, message);
   }
 

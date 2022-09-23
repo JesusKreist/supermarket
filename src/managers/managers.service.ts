@@ -22,11 +22,34 @@ export class ManagersService {
   }
 
   sendEmailToOneEmployee(employeeId: number, message: string) {
-    return null;
+    return this.employeesService.sendEmail(employeeId, { message });
   }
 
-  sendEmailToAllEmployees(message: string) {
-    return null;
+  async sendEmailToAllEmployees(message: string) {
+    const allEmployees = await this.listAllEmployees();
+    const manager = allEmployees.find(
+      (employee) => employee.role === 'MANAGER',
+    );
+
+    if (!manager) {
+      throw new Error('Manager does not exist');
+    }
+
+    const idOfManager = manager.id;
+    const emailOfManager = manager.emailAddress;
+
+    const allEmailsOfEmployees = allEmployees.map(
+      (employee) => employee.emailAddress,
+    );
+
+    const employeeEmailsWithoutManager = allEmailsOfEmployees.filter(
+      (email) => email !== emailOfManager,
+    );
+
+    return this.employeesService.sendEmail(idOfManager, {
+      message,
+      bccEmails: employeeEmailsWithoutManager,
+    });
   }
 
   giveTaskToEmployee(employeeId: number, task: string) {

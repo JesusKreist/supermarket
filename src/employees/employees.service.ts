@@ -37,7 +37,11 @@ export class EmployeesService {
     try {
       return this.prisma.employee.findUniqueOrThrow({
         where: { id: employeeId },
-        include: { tasks: { select: { message: true } } },
+        include: {
+          tasks: {
+            select: { message: true, createdAt: true, jobStatus: true },
+          },
+        },
       });
     } catch (error) {
       throw new NotFoundException('Employee not found');

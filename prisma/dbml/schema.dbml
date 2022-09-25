@@ -63,6 +63,9 @@ Table tasks {
   id Int [pk, increment]
   message String [not null]
   employeeId Int [not null]
+  createdAt DateTime [default: `now()`, not null]
+  updatedAt DateTime [default: `now()`, not null]
+  jobStatus JobStatus [not null, default: 'OPEN']
   employee employees [not null]
 }
 
@@ -70,6 +73,13 @@ Enum Role {
   MANAGER
   SUPERVISOR
   CASHIER
+}
+
+Enum JobStatus {
+  OPEN
+  IN_PROGRESS
+  AWAITING_REVIEW
+  COMPLETED
 }
 
 Ref: orders.customerId > customers.id [delete: Cascade]

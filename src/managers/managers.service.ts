@@ -53,6 +53,6 @@ export class ManagersService {
   }
 
   giveTaskToEmployee(employeeId: number, task: string) {
-    return null;
+    return this.employeesService.giveTask(employeeId, task);
   }
 }

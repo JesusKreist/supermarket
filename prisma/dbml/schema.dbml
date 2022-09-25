@@ -30,7 +30,7 @@ Table employees {
   createdAt DateTime [default: `now()`, not null]
   updatedAt DateTime [default: `now()`, not null]
   orders orders [not null]
-  task tasks [not null]
+  tasks tasks [not null]
 }
 
 Table orders {

@@ -11,6 +11,7 @@ import { ManagersService } from './managers.service';
 import { CreateEmployeeDto } from '../employees/dto/create-employee.dto';
 import { ChangeRoleOfEmployeeDto } from './dto/change-role-of-employee.dto';
 import { EmailToOneEmployeeDto } from './dto/email-to-employees.dto';
+import { GiveTaskToEmployeeDto } from './dto/give-task-to-employee.dto';
 
 @Controller('managers')
 export class ManagersController {
@@ -53,10 +54,8 @@ export class ManagersController {
   }
 
   @Post('give-task-to-employee')
-  giveTaskToEmployee(
-    @Body('employeeId') employeeId: string,
-    @Body('task') task: string,
-  ) {
-    return this.managersService.giveTaskToEmployee(+employeeId, task);
+  giveTaskToEmployee(@Body() giveTaskToEmployeeDto: GiveTaskToEmployeeDto) {
+    const { employeeId, jobToDo } = giveTaskToEmployeeDto;
+    return this.managersService.giveTaskToEmployee(+employeeId, jobToDo);
   }
 }

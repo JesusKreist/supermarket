@@ -37,6 +37,7 @@ export class EmployeesService {
     try {
       return this.prisma.employee.findUniqueOrThrow({
         where: { id: employeeId },
+        include: { tasks: { select: { message: true } } },
       });
     } catch (error) {
       throw new NotFoundException('Employee not found');
@@ -68,5 +69,21 @@ export class EmployeesService {
     const employee = await this.viewOneEmployee(id);
     emailPayload.recipient = employee.emailAddress;
     return this.mailService.sendTaskEmail(emailPayload as EmailPayload);
+  }
+
+  async giveTask(employeeId: number, jobToDo: string) {
+    const employee = await this.viewOneEmployee(employeeId);
+    const newTask = await this.prisma.task.create({
+      data: {
+        message: jobToDo,
+        employeeId,
+      },
+    });
+
+    await this.sendEmail(employeeId, {
+      message: `Hi ${employee.firstName}, you have a new task: ${jobToDo}. You can view it on your dashboard.`,
+    });
+
+    return newTask;
   }
 }

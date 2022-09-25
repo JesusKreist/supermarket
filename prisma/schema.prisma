@@ -47,7 +47,7 @@ model Employee {
   createdAt          DateTime @default(now()) @map("created_at") @db.DateTime(0)
   updatedAt          DateTime @default(now()) @map("updated_at") @db.DateTime(0)
   orders             Order[]
-  task               Task[]
+  tasks              Task[]
 
   @@map("employees")
 }
